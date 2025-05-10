@@ -1,0 +1,11 @@
+
+services:
+  backend:
+    build: .
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONPATH=/app
+    command: ["poetry", "run", "uvicorn", "backend.shared.infrastructure.api.main:app", "--host", "0.0.0.0"]

@@ -1,0 +1,47 @@
+[tool.poetry]
+name = "factorial-challenge-backend"
+version = "0.1.0"
+description = "Backend for Factorial Challenge"
+authors = ["Ismael Calvo <ismaelcj@gmail.com>"]
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "^0.115.12"
+uvicorn = "^0.34.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.5"
+pytest-cov = "^6.1.1"
+black = "^24.1.1"
+isort = "^5.13.2"
+mypy = "^1.8.0"
+flake8 = "^7.0.0"
+starlette = "^0.46.1"
+httpx = "^0.25.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 88
+target-version = ["py312"]
+
+[tool.isort]
+profile = "black"
+line_length = 88
+
+[tool.mypy]
+python_version = "3.12"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+
+[tool.pytest.ini_options]
+testpaths = ["backend/tests"]
+python_files = "test_*.py"
+python_functions = "test_*"
+addopts = "--cov=backend"
