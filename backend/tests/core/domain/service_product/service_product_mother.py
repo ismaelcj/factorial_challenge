@@ -1,11 +1,13 @@
-import uuid
+from backend.core.domain.category import Category
+from backend.core.domain.service_product.service_product import ServiceProduct
+from backend.shared.domain.value_objects.custom_uuid import Uuid
 
-from core.domain.service_product.service_product import ServiceProduct
 
 class ServiceProductMother:
     @staticmethod
     def create(
-        product_id: str = uuid.uuid4().hex,
-        name: str = "Test Service"
+        product_id: str = Uuid.generate().value,
+        name: str = "Test Service",
+        category: Category = Category.FRAME_FINISH,
     ) -> ServiceProduct:
-        return ServiceProduct.create(product_id, name)
+        return ServiceProduct.create(product_id, name, category)

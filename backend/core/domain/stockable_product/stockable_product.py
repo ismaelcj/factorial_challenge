@@ -1,18 +1,33 @@
+from backend.core.domain.category import Category
 from backend.core.domain.product import Product
 from backend.shared.domain.value_objects.custom_uuid import Uuid
 
 
 class StockableProduct(Product):
-    def __init__(self, product_id: Uuid, name: str, stock_units: int, price: float):
-        super().__init__(product_id, name)
+    def __init__(
+            self,
+            product_id: Uuid,
+            name: str,
+            category: Category,
+            stock_units: int,
+            price: float
+    ):
+        super().__init__(product_id, name, category)
         self._stock_units = stock_units
         self._price = price
 
     @classmethod
-    def create(cls, product_id: str, name: str, price: float) -> 'StockableProduct':
+    def create(
+            cls,
+            product_id: str,
+            name: str,
+            category: Category,
+            price: float
+    ) -> 'StockableProduct':
         return cls(
             Uuid(product_id),
             name,
+            category,
             0,
             price
         )
