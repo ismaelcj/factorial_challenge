@@ -1,4 +1,7 @@
+from typing import Optional
+
 from backend.core.domain.category import Category
+from backend.core.domain.pricing_context import PricingContext
 from backend.core.domain.product import Product
 from backend.core.domain.service_product.null_price_rule import NullPriceRule
 from backend.core.domain.service_product.price_rule import PriceRule
@@ -29,6 +32,11 @@ class ServiceProduct(Product):
                 return price_rule
         return NullPriceRule()
 
-    def get_price(self, applied_to: Product = None) -> float:
-        price_rule = self.get_price_rule(applied_to)
-        return price_rule.apply(applied_to)
+    def get_price(self, context: Optional[PricingContext] = None) -> float:
+        assert context.applicable_products is not None, \
+            "A list of applicable products is required for service price calculation"
+        price = 0.0
+        for product in context.applicable_products:
+            price_rule = self.get_price_rule(product)
+            price += price_rule.apply(product)
+        return price

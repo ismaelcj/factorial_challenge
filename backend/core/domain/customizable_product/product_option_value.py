@@ -1,4 +1,7 @@
+from typing import Optional
+
 from backend.core.domain.customizable_product.product_option import ProductOption
+from backend.core.domain.pricing_context import PricingContext
 from backend.core.domain.product import Product
 from backend.shared.domain.value_objects.custom_uuid import Uuid
 
@@ -28,12 +31,16 @@ class ProductOptionValue:
     def is_product_valid_for_option(cls, product: Product, option: ProductOption) -> bool:
         return product.category == option.category
 
-    def get_price(self) -> float:
-        return self._product.get_price()
+    def get_price(self, context: Optional[PricingContext] = None) -> float:
+        return self._product.get_price(context)
 
     @property
     def option_id(self) -> Uuid:
         return self._option.id
+
+    @property
+    def product(self) -> Product:
+        return self._product
 
     @property
     def id(self):

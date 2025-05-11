@@ -5,6 +5,7 @@ from backend.core.domain.customizable_product.customizable_product import Custom
 from backend.core.domain.product import Product
 
 from backend.tests.core.domain.customizable_product.customizable_product_mother import CustomizableProductMother
+from backend.tests.core.domain.service_product.service_product_mother import ServiceProductMother
 from backend.tests.core.domain.stockable_product.stockable_product_mother import StockableProductMother
 
 
@@ -61,3 +62,32 @@ def test_get_price_with_valid_options():
     customizable_product.add_product_option_value(option2, product2)
     
     assert customizable_product.get_price() == product1.get_price() + product2.get_price()
+
+def test_get_price_with_service_product_option():
+    frame_product = StockableProductMother.create_with_stock(
+        name="Frame", category=Category.FRAME, price=200.0)
+    wheels_product = StockableProductMother.create_with_stock(
+        name="Wheels", category=Category.WHEELS, price=100.0)
+
+    service = ServiceProductMother.create()
+    service_price_for_frame = 20.0
+    service.add_price_rule(frame_product, service_price_for_frame)
+    service_price_for_wheels = 10.0
+    service.add_price_rule(wheels_product, service_price_for_wheels)
+
+    customizable_product = CustomizableProductMother.create()
+    customizable_product.add_option("Frame", Category.FRAME, True)
+    customizable_product.add_option("Wheels", Category.WHEELS, True)
+    customizable_product.add_option("Frame Finish", Category.FRAME_FINISH, False)
+
+    options = customizable_product.options
+    customizable_product.add_product_option_value(options[0], frame_product)
+    customizable_product.add_product_option_value(options[1], wheels_product)
+    customizable_product.add_product_option_value(options[2], service)
+
+    expected_service_price = service_price_for_frame + service_price_for_wheels
+    expected_customizable_product_price = frame_product.get_price() + \
+                                          wheels_product.get_price() + \
+                                          expected_service_price
+
+    assert customizable_product.get_price() == expected_customizable_product_price

@@ -1,4 +1,7 @@
+from typing import Optional
+
 from backend.core.domain.category import Category
+from backend.core.domain.pricing_context import PricingContext
 from backend.core.domain.product import Product
 from backend.shared.domain.value_objects.custom_uuid import Uuid
 
@@ -44,5 +47,5 @@ class StockableProduct(Product):
         assert self._stock_units >= units
         self._stock_units -= units
 
-    def get_price(self) -> float:
+    def get_price(self, context: Optional[PricingContext] = None) -> float:
         return self._price

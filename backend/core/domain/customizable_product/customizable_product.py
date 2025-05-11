@@ -1,7 +1,10 @@
+from typing import Optional, List
+
 from backend.core.domain.category import Category
 from backend.core.domain.customizable_product.customizable_product_configuration import CustomizableProductConfiguration
 from backend.core.domain.customizable_product.product_option import ProductOption
 from backend.core.domain.customizable_product.product_option_value import ProductOptionValue
+from backend.core.domain.pricing_context import PricingContext
 from backend.core.domain.product import Product
 from backend.shared.domain.value_objects.custom_uuid import Uuid
 
@@ -54,12 +57,22 @@ class CustomizableProduct(Product):
     def _is_option_already_in_selected_values(self, option: ProductOption) -> bool:
         return any(value.option_id == option.id for value in self._selected_values)
 
-    def get_price(self) -> float:
-        assert self.selected_values_are_valid(), "Selected products are not valid"
+    def get_price(self, context: Optional[PricingContext] = None) -> float:
+        assert self._selected_values_are_valid(), "Selected products are not valid"
+
+        if context is None:
+            context = PricingContext(
+                applicable_products=self._get_selected_products()
+            )
+
         total_price = 0
         for option in self._selected_values:
-            total_price += option.get_price()
+            total_price += option.get_price(context)
+
         return total_price
 
-    def selected_values_are_valid(self):
+    def _selected_values_are_valid(self):
         return self._configuration.are_option_values_valid(self._selected_values)
+
+    def _get_selected_products(self) -> List[Product]:
+        return [option.product for option in self._selected_values]

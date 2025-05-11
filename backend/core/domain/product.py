@@ -1,5 +1,7 @@
 from abc import abstractmethod
+from typing import Optional
 
+from backend.core.domain.pricing_context import PricingContext
 from backend.shared.domain.aggregate_root import AggregateRoot
 from backend.shared.domain.value_objects.custom_uuid import Uuid
 from backend.core.domain.category import Category
@@ -12,7 +14,7 @@ class Product(AggregateRoot):
         self._category = category
 
     @abstractmethod
-    def get_price(self) -> float:
+    def get_price(self, context: Optional[PricingContext] = None) -> float:
         pass
 
     @property
