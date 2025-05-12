@@ -6,6 +6,8 @@ from backend.core.domain.customizable_product.product_option import ProductOptio
 from backend.core.domain.customizable_product.product_option_value import ProductOptionValue
 from backend.core.domain.pricing_context import PricingContext
 from backend.core.domain.product import Product
+from backend.core.domain.product_compatibility.product_incompatibility import ProductIncompatibility
+from backend.core.domain.product_compatibility.product_compatibility_service import ProductCompatibilityService
 from backend.shared.domain.value_objects.custom_uuid import Uuid
 
 
@@ -44,9 +46,20 @@ class CustomizableProduct(Product):
     def options(self) -> list[ProductOption]:
         return self._configuration.options
 
-    def add_product_option_value(self, option: ProductOption, product: Product) -> None:
+    def add_product_option_value(self, option: ProductOption, product: Product, 
+                                incompatibilities: List[ProductIncompatibility] = None) -> None:
         assert not self._is_option_already_in_selected_values(option),\
             "Option already exists in this product"
+
+        if incompatibilities:
+            selected_products = self._get_selected_products()
+
+            validation_result = ProductCompatibilityService.validate_compatibility(
+                product, selected_products, incompatibilities
+            )
+
+            assert validation_result.is_valid, validation_result.message
+        
         option_value = ProductOptionValue.create(
             option_value_id=Uuid.generate().value,
             option=option,
