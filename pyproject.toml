@@ -45,3 +45,6 @@ testpaths = ["backend/tests"]
 python_files = "test_*.py"
 python_functions = "test_*"
 addopts = "--cov=backend"
+
+[tool.coverage.run]
+omit = ["backend/tests/*"]
