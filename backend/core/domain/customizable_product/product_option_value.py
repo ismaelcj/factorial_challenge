@@ -3,12 +3,13 @@ from typing import Optional
 from backend.core.domain.customizable_product.product_option import ProductOption
 from backend.core.domain.pricing_context import PricingContext
 from backend.core.domain.product import Product
+from backend.shared.domain.entity import Entity
 from backend.shared.domain.value_objects.custom_uuid import Uuid
 
 
-class ProductOptionValue:
+class ProductOptionValue(Entity):
     def __init__(self, option_value_id: Uuid, option: ProductOption, product: Product):
-        self._id = option_value_id
+        super().__init__(option_value_id)
         self._option = option
         self._product = product
 
@@ -19,7 +20,7 @@ class ProductOptionValue:
             option: ProductOption,
             product: Product
     ) -> 'ProductOptionValue':
-        assert cls.is_product_valid_for_option(product, option), \
+        assert cls._is_product_valid_for_option(product, option), \
             "Product category does not match option category"
         return cls(
             Uuid(option_value_id),
@@ -28,7 +29,7 @@ class ProductOptionValue:
         )
 
     @classmethod
-    def is_product_valid_for_option(cls, product: Product, option: ProductOption) -> bool:
+    def _is_product_valid_for_option(cls, product: Product, option: ProductOption) -> bool:
         return product.category == option.category
 
     def get_price(self, context: Optional[PricingContext] = None) -> float:

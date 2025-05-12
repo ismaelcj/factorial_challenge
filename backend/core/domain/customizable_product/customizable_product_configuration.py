@@ -1,12 +1,13 @@
 from backend.core.domain.category import Category
 from backend.core.domain.customizable_product.product_option import ProductOption
 from backend.core.domain.customizable_product.product_option_value import ProductOptionValue
+from backend.shared.domain.entity import Entity
 from backend.shared.domain.value_objects.custom_uuid import Uuid
 
 
-class CustomizableProductConfiguration:
+class CustomizableProductConfiguration(Entity):
     def __init__(self, config_id: Uuid, options: list[ProductOption]):
-        self._id = config_id
+        super().__init__(config_id)
         self._options = options
 
     def add_option(self, name: str, category: Category, required: bool = False) -> None:

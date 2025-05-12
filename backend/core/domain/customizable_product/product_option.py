@@ -1,8 +1,9 @@
 from backend.core.domain.category import Category
+from backend.shared.domain.entity import Entity
 from backend.shared.domain.value_objects.custom_uuid import Uuid
 
 
-class ProductOption:
+class ProductOption(Entity):
     def __init__(
         self,
         option_id: Uuid,
@@ -10,7 +11,7 @@ class ProductOption:
         category: Category,
         required: bool,
     ):
-        self._id = option_id
+        super().__init__(option_id)
         self._name = name
         self._category = category
         self._required = required
