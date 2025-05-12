@@ -1,7 +1,9 @@
+from abc import ABC
+
 from backend.shared.domain.value_objects.custom_uuid import Uuid
 
 
-class Entity:
+class Entity(ABC):
     def __init__(self, entity_id: Uuid):
         self._id = entity_id
 
