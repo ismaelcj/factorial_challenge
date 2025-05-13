@@ -11,7 +11,7 @@ class StockableProductMother:
         category: Category = Category.FRAME,
         price: float = 100.0,
     ) -> StockableProduct:
-        return StockableProduct.create(product_id, name, category, price)
+        return StockableProduct.create(product_id, name, category.value, price)
 
     @staticmethod
     def create_with_stock(
@@ -21,6 +21,6 @@ class StockableProductMother:
         category: Category = Category.FRAME,
         price: float = 100.0,
     ) -> StockableProduct:
-        product = StockableProduct.create(product_id, name, category, price)
+        product = StockableProduct.create(product_id, name, category.value, price)
         product.increase_stock(stock)
         return product

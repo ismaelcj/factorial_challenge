@@ -15,3 +15,9 @@ class PriceRule:
 
     def is_null(self):
         return False
+
+    def to_primitives(self) -> dict:
+        return {
+            'recipient_product_id': self._recipient_product.id.value,
+            'price': self._price
+        }

@@ -1,18 +1,20 @@
 from abc import abstractmethod
 from typing import Optional, List
 
+from backend.core.domain.category import Category
 from backend.core.domain.pricing_context import PricingContext
+from backend.core.domain.product_compatibility.product_incompatibility import ProductIncompatibility
+from backend.core.domain.product_type import ProductType
 from backend.shared.domain.aggregate_root import AggregateRoot
 from backend.shared.domain.value_objects.custom_uuid import Uuid
-from backend.core.domain.category import Category
-from backend.core.domain.product_compatibility.product_incompatibility import ProductIncompatibility
 
 
 class Product(AggregateRoot):
-    def __init__(self, product_id: Uuid, name: str, category: Category):
+    def __init__(self, product_id: Uuid, name: str, category: Category, product_type: ProductType):
         super().__init__(product_id)
         self._name = name
         self._category = category
+        self._product_type = product_type
 
     @abstractmethod
     def get_price(self, context: Optional[PricingContext] = None) -> float:
@@ -35,5 +37,9 @@ class Product(AggregateRoot):
     def name(self) -> str:
         return self._name
 
+    @property
+    def product_type(self) -> ProductType:
+        return self._product_type
+
     def __repr__(self):
-        return f"Product[{self._name} category={self._category}]"
+        return f"Product[{self._name} category={self._category}, type={self._product_type}]"

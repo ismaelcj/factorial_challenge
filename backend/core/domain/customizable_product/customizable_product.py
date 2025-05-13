@@ -8,6 +8,7 @@ from backend.core.domain.pricing_context import PricingContext
 from backend.core.domain.product import Product
 from backend.core.domain.product_compatibility.product_incompatibility import ProductIncompatibility
 from backend.core.domain.product_compatibility.product_compatibility_service import ProductCompatibilityService
+from backend.core.domain.product_type import ProductType
 from backend.shared.domain.value_objects.custom_uuid import Uuid
 
 
@@ -20,7 +21,7 @@ class CustomizableProduct(Product):
         configuration: CustomizableProductConfiguration,
         selected_values: list[ProductOptionValue],
     ):
-        super().__init__(product_id, name, category)
+        super().__init__(product_id, name, category, ProductType.CUSTOMIZABLE)
         self._configuration = configuration
         self._selected_values = selected_values
 
