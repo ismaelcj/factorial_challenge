@@ -1,0 +1,92 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+abstract AggregateRoot {
+    id : Uuid
+}
+
+abstract Product {
+    name : String
+    category : ProductCategory
+    getPrice() : Float
+}
+
+class ProductCategory
+
+class StockableProduct {
+    stock_units : Integer
+    price : Float
+}
+
+class ServiceProduct {
+    price_rules : [ServicePriceRule]
+}
+
+class PriceRule {
+    recipient_product : Product
+    price : Float
+}
+
+class CustomizableProduct {
+    configuration : CustomizableProductConfiguration
+    selected_values : [ProductOptionValue]
+}
+
+class CustomizableProductConfiguration {
+    options : [ProductOption]
+}
+
+class ProductOption {
+    name : String
+    category : ProductCategory
+    required : Boolean
+}
+
+class ProductOptionValue {
+    option : ProductOption
+    product : Product
+}
+
+class ProductIncompatibility {
+    product_a_id : Uuid
+    product_b_id : Uuid
+    reason : String
+}
+
+class ProductCompatibilityService {
+    product : Product
+    products_to_check : [Product]
+    incompatibilities : [ProductIncompatibility]
+}
+
+class PricingContext {
+    applicable_products: [Product]
+}
+
+AggregateRoot <|-- Product
+
+Product <|-- StockableProduct
+Product <|-- ServiceProduct
+Product <|-- CustomizableProduct
+Product *-- ProductCategory
+Product --> PricingContext
+Product --> ProductIncompatibility
+
+PriceRule <|-- NullPriceRule
+ServiceProduct *-- "n" PriceRule
+PriceRule o-- Product
+
+CustomizableProduct *-- CustomizableProductConfiguration
+CustomizableProduct *-- "n" ProductOptionValue
+CustomizableProduct --> ProductIncompatibility
+CustomizableProduct --> ProductCompatibilityService
+CustomizableProductConfiguration *-- "n" ProductOption
+ProductOptionValue o-- ProductOption
+CustomizableProduct --> PricingContext
+ProductOptionValue --> PricingContext
+PricingContext o--> Product
+
+ProductCompatibilityService o-- Product
+ProductCompatibilityService o-- "n" ProductIncompatibility
+
+@enduml

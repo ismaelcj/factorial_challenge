@@ -1,0 +1,27 @@
+@startuml
+
+abstract Product {
+    name : String
+    category : ProductCategory
+    getPrice() : Float
+}
+
+class StockableProduct {
+    stock_units : Integer
+    price : Float
+}
+
+class ServiceProduct {
+    price_rules : [ServicePriceRule]
+}
+
+class CustomizableProduct {
+    configuration : CustomizableProductConfiguration
+    selected_values : [ProductOptionValue]
+}
+
+Product <|-- StockableProduct
+Product <|-- ServiceProduct
+Product <|-- CustomizableProduct
+
+@enduml

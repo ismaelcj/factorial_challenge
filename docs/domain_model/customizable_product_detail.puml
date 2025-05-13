@@ -1,0 +1,27 @@
+@startuml
+
+class CustomizableProduct {
+    configuration : CustomizableProductConfiguration
+    selected_values : [ProductOptionValue]
+}
+
+class CustomizableProductConfiguration {
+    options : [ProductOption]
+}
+
+class ProductOption {
+    name : String
+    category : ProductCategory
+    required : Boolean
+}
+
+class ProductOptionValue {
+    option : ProductOption
+    product : Product
+}
+
+CustomizableProduct *-right- CustomizableProductConfiguration
+CustomizableProductConfiguration *-- "n" ProductOption
+CustomizableProduct *--- "n" ProductOptionValue
+
+@enduml

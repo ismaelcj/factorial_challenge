@@ -1,0 +1,32 @@
+@startuml
+
+abstract Product {
+    name : String
+    category : ProductCategory
+    getPrice() : Float
+}
+
+class CustomizableProduct {
+    configuration : CustomizableProductConfiguration
+    selected_values : [ProductOptionValue]
+}
+
+class ProductIncompatibility {
+    product_a_id : Uuid
+    product_b_id : Uuid
+    reason : String
+}
+
+class ProductCompatibilityService {
+    product : Product
+    products_to_check : [Product]
+    incompatibilities : [ProductIncompatibility]
+}
+
+Product <|-- CustomizableProduct
+CustomizableProduct --> ProductIncompatibility
+CustomizableProduct --> ProductCompatibilityService
+ProductCompatibilityService o-- Product
+ProductCompatibilityService o-- "n" ProductIncompatibility
+
+@enduml
